@@ -1,4 +1,4 @@
-package iuh.week05_huynhhoangphuc_spring;
+package iuh.fit;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
