@@ -1,4 +1,4 @@
-package iuh.fit.backend.models;
+package iuh.fit.backend.ids;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

@@ -1,12 +1,17 @@
 package iuh.fit.backend.models;
 
+import iuh.fit.backend.enums.SkillLevel;
+import iuh.fit.backend.ids.CandidateSkillId;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @Entity
+@ToString
 @Table(name = "candidate_skill")
 public class CandidateSkill {
     @EmbeddedId
@@ -26,6 +31,7 @@ public class CandidateSkill {
     private String moreInfos;
 
     @Column(name = "skill_level", nullable = false)
-    private Byte skillLevel;
+    @Enumerated(EnumType.ORDINAL)
+    private SkillLevel skillLevel;
 
 }

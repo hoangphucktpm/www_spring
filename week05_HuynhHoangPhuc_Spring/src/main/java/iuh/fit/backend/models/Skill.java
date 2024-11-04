@@ -1,28 +1,39 @@
 package iuh.fit.backend.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import iuh.fit.backend.enums.SkillType;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
+@ToString
 @Table(name = "skill")
 public class Skill {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "skill_id", nullable = false)
     private Long id;
 
     @Column(name = "skill_description")
     private String skillDescription;
 
-    @Column(name = "skill_name")
+    @Column(name = "skill_name", length = 255)
     private String skillName;
 
     @Column(name = "type")
-    private Byte type;
+    @Enumerated(EnumType.ORDINAL)
+    private SkillType type;
+
+    @OneToMany(mappedBy = "skill")
+    private Set<CandidateSkill> candidateSkills = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "skill")
+    private Set<JobSkill> jobSkills = new LinkedHashSet<>();
 
 }
