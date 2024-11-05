@@ -5,7 +5,9 @@ import iuh.fit.backend.models.Address;
 import iuh.fit.backend.models.Candidate;
 import iuh.fit.backend.repositories.AddressRepository;
 import iuh.fit.backend.repositories.CandidateRepository;
+import iuh.fit.backend.repositories.CompanyRepository;
 import iuh.fit.backend.services.CandidateServices;
+import iuh.fit.backend.services.CompanyServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -23,11 +25,11 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Controller
-public class CandidateController {
+public class CompanyController {
     @Autowired
-    private CandidateRepository candidateRepository;
+    private CompanyRepository companyRepository;
     @Autowired
-    private CandidateServices candidateServices;
+    private CompanyServices companyServices;
     @Autowired
     private AddressRepository addressRepository;
 
