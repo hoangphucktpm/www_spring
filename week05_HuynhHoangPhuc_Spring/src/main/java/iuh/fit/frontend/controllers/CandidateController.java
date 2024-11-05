@@ -107,7 +107,7 @@ public class CandidateController {
     }
 
 
-    @PostMapping("/candidates/update")
+    @PostMapping("/update")
     public String update(
             @ModelAttribute("candidate") Candidate candidate,
             BindingResult result,

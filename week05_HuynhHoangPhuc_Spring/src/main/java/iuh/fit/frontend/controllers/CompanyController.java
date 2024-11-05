@@ -104,7 +104,7 @@ public class CompanyController {
         return modelAndView;
     }
 
-    @PostMapping("companies/update")
+    @PostMapping("/update")
     public String update(@ModelAttribute("company") Company company,
                          BindingResult result, Model model) {
 
