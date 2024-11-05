@@ -1,8 +1,6 @@
 package iuh.fit.backend.services;
 
-import iuh.fit.backend.models.Candidate;
 import iuh.fit.backend.models.Company;
-import iuh.fit.backend.repositories.CandidateRepository;
 import iuh.fit.backend.repositories.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;

@@ -14,6 +14,7 @@
             margin: 50px auto;
             max-width: 1000px;
         }
+
         .no-candidates {
             text-align: center;
             margin-top: 20px;
@@ -47,7 +48,8 @@
                     <td th:text="${candidate.address}"></td>
                     <td th:text="${candidate.phone}"></td>
                     <td th:text="${candidate.email}"></td>
-                    <td><a class="btn btn-warning btn-sm" th:href="@{/edit/{id}(id=${candidate.id})}">Edit</a></td>
+                    <td><a class="btn btn-warning btn-sm"
+                           th:href="@{show-edit-form/{id}(id=${candidate.id})}">Edit</a></td>
                     <td><a class="btn btn-danger btn-sm" th:href="@{/delete/{id}(id=${candidate.id})}">Delete</a></td>
                 </tr>
                 </tbody>

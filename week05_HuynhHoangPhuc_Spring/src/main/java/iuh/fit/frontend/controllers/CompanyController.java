@@ -3,10 +3,9 @@ package iuh.fit.frontend.controllers;
 import com.neovisionaries.i18n.CountryCode;
 import iuh.fit.backend.models.Address;
 import iuh.fit.backend.models.Candidate;
+import iuh.fit.backend.models.Company;
 import iuh.fit.backend.repositories.AddressRepository;
-import iuh.fit.backend.repositories.CandidateRepository;
 import iuh.fit.backend.repositories.CompanyRepository;
-import iuh.fit.backend.services.CandidateServices;
 import iuh.fit.backend.services.CompanyServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,122 +15,111 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Controller
+@RequestMapping("/companies")
 public class CompanyController {
+
     @Autowired
     private CompanyRepository companyRepository;
+
     @Autowired
     private CompanyServices companyServices;
+
     @Autowired
     private AddressRepository addressRepository;
 
-    @GetMapping("/list")
-    public String showCandidateList(Model model) {
-        model.addAttribute("candidates", candidateRepository.findAll());
-        return "candidates/list_no_paging";
+    @GetMapping("/list_company")
+    public String showCompanyList(Model model) {
+        model.addAttribute("companies", companyRepository.findAll());
+        return "companies/list_no_paging_company";
     }
 
-    @GetMapping("/candidates")
-    public String showCandidateListPaging(Model model,
-                                          @RequestParam("page") Optional<Integer> page,
-                                          @RequestParam("size") Optional<Integer> size) {
+    @GetMapping("")
+    public String showCompanyListPaging(Model model,
+                                        @RequestParam("page") Optional<Integer> page,
+                                        @RequestParam("size") Optional<Integer> size) {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(10);
         /*Page<Candidate> candidatePage= candidateServices.findPaginated(
                 PageRequest.of(currentPage - 1, pageSize)
         );*/
-        Page<Candidate> candidatePage = candidateServices.findAll(currentPage - 1,
+        Page<Company> companyPage = companyServices.findAll(currentPage - 1,
                 pageSize, "id", "asc");
 
-        model.addAttribute("candidatePage", candidatePage);
+        model.addAttribute("companyPage", companyPage);
 
-        int totalPages = candidatePage.getTotalPages();
+        int totalPages = companyPage.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
                     .boxed()
                     .collect(Collectors.toList());
             model.addAttribute("pageNumbers", pageNumbers);
         }
-        return "candidates/list";
+        return "companies/list_company";
     }
 
     @GetMapping("/show-add-form")
     public ModelAndView add(Model model) {
         ModelAndView modelAndView = new ModelAndView();
-        Candidate candidate = new Candidate();
-        candidate.setAddress(new Address());
-        modelAndView.addObject("candidate", candidate);
-        modelAndView.addObject("address", candidate.getAddress());
+        Company company = new Company();
+        company.setAddress(new Address());
+        modelAndView.addObject("company", company);
         modelAndView.addObject("countries", CountryCode.values());
-        modelAndView.setViewName("candidates/add");
+        modelAndView.setViewName("companies/add_company");
         return modelAndView;
     }
 
-    @PostMapping("/candidates/add")
-    public String addCandidate(
-            @ModelAttribute("candidate") Candidate candidate,
-            BindingResult result, Model model) {
+    @PostMapping("/companies/add")
+    public String addCompany(@ModelAttribute("company") Company company,
+                             BindingResult result, Model model) {
 
         if (result.hasErrors()) {
             model.addAttribute("countries", CountryCode.values());
-            return "candidates/add";
+            return "companies/add_company";
         }
 
-        addressRepository.save(candidate.getAddress());
-        candidateRepository.save(candidate);
+        addressRepository.save(company.getAddress());
+        companyRepository.save(company);
 
-        return "redirect:/candidates";
+        return "redirect:/companies";
     }
 
     @GetMapping("/show-edit-form/{id}")
     public ModelAndView edit(@PathVariable("id") long id) {
         ModelAndView modelAndView = new ModelAndView();
-        Optional<Candidate> opt = candidateRepository.findById(id);
+        Optional<Company> opt = companyRepository.findById(id);
         if (opt.isPresent()) {
-            Candidate candidate = opt.get();
-            modelAndView.addObject("candidate", candidate);
+            Company company = opt.get();
+            modelAndView.addObject("company", company);
             modelAndView.addObject("countries", CountryCode.values());
-
-            modelAndView.setViewName("candidates/update");
+            modelAndView.setViewName("companies/update");
         } else {
-            modelAndView.setViewName("redirect:/candidates?error=candidateNotFound");
+            modelAndView.setViewName("redirect:/companies?error=companyNotFound");
         }
         return modelAndView;
     }
 
+    @PostMapping("companies/update")
+    public String update(@ModelAttribute("company") Company company,
+                         BindingResult result, Model model) {
 
-    @PostMapping("/candidates/update")
-    public String update(
-            @ModelAttribute("candidate") Candidate candidate,
-            BindingResult result,
-            Model model) {
-
-        if (candidate.getAddress() == null || candidate.getAddress().getCountry() == null) {
+        if (company.getAddress() == null || company.getAddress().getCountry() == null) {
             model.addAttribute("error", "Country is required.");
-            model.addAttribute("candidate", candidate);
+            model.addAttribute("company", company);
             model.addAttribute("countries", CountryCode.values());
-            return "candidates/update";
+            return "companies/update";
         }
 
-        Address address = candidate.getAddress();
-        if (address.getId() == null) {
-            addressRepository.save(address);
-        } else {
-            addressRepository.save(address);
-        }
-        candidate.setAddress(address);
-        candidateRepository.save(candidate);
+        Address address = company.getAddress();
+        addressRepository.save(address);
+        company.setAddress(address);
+        companyRepository.save(company);
 
-        return "redirect:/candidates?success=updateSuccess";
+        return "redirect:/companies?success=updateSuccess";
     }
-
-
 }

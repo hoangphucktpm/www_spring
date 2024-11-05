@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Controller
+@RequestMapping("/candidates")
 public class CandidateController {
     @Autowired
     private CandidateRepository candidateRepository;
@@ -37,7 +38,7 @@ public class CandidateController {
         return "candidates/list_no_paging";
     }
 
-    @GetMapping("/candidates")
+    @GetMapping("")
     public String showCandidateListPaging(Model model,
                                           @RequestParam("page") Optional<Integer> page,
                                           @RequestParam("size") Optional<Integer> size) {

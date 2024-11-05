@@ -5,6 +5,7 @@ import iuh.fit.backend.models.Address;
 import iuh.fit.backend.models.Candidate;
 import iuh.fit.backend.repositories.AddressRepository;
 import iuh.fit.backend.repositories.CandidateRepository;
+import iuh.fit.backend.repositories.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -21,10 +22,13 @@ public class Week05HuynhHoangPhucSpringApplication {
     public static void main(String[] args) {
         SpringApplication.run(Week05HuynhHoangPhucSpringApplication.class, args);
     }
-//    @Autowired
-//    private CandidateRepository candidateRepository;
-//    @Autowired
-//    private AddressRepository addressRepository;
+
+/*    @Autowired
+    private CandidateRepository candidateRepository;
+    @Autowired
+    private CompanyRepository companyRepository;
+    @Autowired
+    private AddressRepository addressRepository;*/
 //    @Bean
 //    CommandLineRunner initData(){
 //        return args -> {

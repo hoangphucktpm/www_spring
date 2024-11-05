@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Candidates with Pagination</title>
+    <title>List of Companies</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
@@ -96,42 +96,42 @@
 </head>
 <body>
 <div class="container">
-    <h1 class="text-center">List of Candidates</h1>
+    <h1 class="text-center">List of Companies</h1>
     <table class="table table-striped table-hover">
         <thead>
         <tr>
             <th>ID</th>
-            <th>Full Name</th>
-            <th>DOB</th>
-            <th>Address</th>
-            <th>Phone</th>
+            <th>Name</th>
             <th>Email</th>
+            <th>Phone</th>
+            <th>Website</th>
+            <th>Địa chỉ</th>
             <th>Edit</th>
             <th>Delete</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="candidate, iStat : ${candidatePage.content}">
-            <td th:text="${candidate.id}"></td>
-            <td th:text="${candidate.fullName}"></td>
-            <td th:text="${candidate.dob}"></td>
-            <td th:text="${candidate.address}"></td>
-            <td th:text="${candidate.phone}"></td>
-            <td th:text="${candidate.email}"></td>
-            <td><a class="btn btn-warning btn-sm"
-                   th:href="@{candidates/show-edit-form/{id}(id=${candidate.id})}">Edit</a></td>
-            <td><a class="btn btn-danger btn-sm" th:href="@{/delete/{id}(id=${candidate.id})}">Delete</a></td>
+        <tr th:each="company, iStat : ${companyPage.content}">
+            <td th:text="${company.id}"></td>
+            <td th:text="${company.compName}"></td>
+            <td th:text="${company.email}"></td>
+            <td th:text="${company.phone}"></td>
+            <td th:text="${company.webUrl}"></td>
+            <td th:text="${company.address}"></td>
+            <td><a class="btn btn-warning btn-sm" th:href="@{companies/show-edit-form/{id}(id=${company.id})}">Edit</a>
+            </td>
+            <td><a class="btn btn-danger btn-sm" th:href="@{/delete/{id}(id=${company.id})}">Delete</a></td>
         </tr>
         </tbody>
     </table>
-    <div class="inline" th:if="${candidatePage.totalPages > 0}" th:each="pageNumber : ${pageNumbers}">
-        <a th:href="@{/candidates(size=${candidatePage.size}, page=${pageNumber})}"
+    <div class="inline" th:if="${companyPage.totalPages > 0}" th:each="pageNumber : ${pageNumbers}">
+        <a th:href="@{/companies(size=${companyPage.size}, page=${pageNumber})}"
            th:text="${pageNumber}"
-           th:class="${pageNumber==candidatePage.number + 1} ? active"></a>
+           th:class="${pageNumber==companyPage.number + 1} ? active"></a>
     </div>
     <br/>
     <div class="text-center mt-4">
-        <a class="btn btn-add" href="/candidates/show-add-form">Add a New Candidate</a>
+        <a class="btn btn-add" href="/companies/show-add-form">Add a New Companies</a>
     </div>
 </div>
 </body>
