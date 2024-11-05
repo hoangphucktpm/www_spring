@@ -85,23 +85,44 @@ public class CandidateController {
     public ModelAndView edit(@PathVariable("id") long id) {
         ModelAndView modelAndView = new ModelAndView();
         Optional<Candidate> opt = candidateRepository.findById(id);
-        if(opt.isPresent()) {
+        if (opt.isPresent()) {
             Candidate candidate = opt.get();
             modelAndView.addObject("candidate", candidate);
-            modelAndView.addObject("address", candidate.getAddress());
             modelAndView.addObject("countries", CountryCode.values());
             modelAndView.setViewName("candidates/update");
+        } else {
+            modelAndView.setViewName("redirect:/candidates?error=candidateNotFound");
         }
         return modelAndView;
     }
+
     @PostMapping("/candidates/update")
     public String update(
             @ModelAttribute("candidate") Candidate candidate,
-            @ModelAttribute("address") Address address,
-            BindingResult result, Model model) {
-        addressRepository.save(address);
-//        candidate.setAddress(address);
+            BindingResult result,
+            Model model) {
+
+        if (candidate.getAddress() == null || candidate.getAddress().getCountry() == null) {
+            model.addAttribute("error", "Country is required.");
+            model.addAttribute("candidate", candidate);
+            model.addAttribute("countries", CountryCode.values());
+            return "candidates/update";
+        }
+
+        // Lưu địa chỉ trước
+        Address address = candidate.getAddress();
+        if (address.getId() == null) {
+            addressRepository.save(address);
+        } else {
+            addressRepository.save(address);
+        }
+
+        candidate.setAddress(address);
         candidateRepository.save(candidate);
-        return "redirect:/candidates";
+
+        return "redirect:/candidates?success=updateSuccess";
     }
+
+
+
 }
