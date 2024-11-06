@@ -74,7 +74,7 @@ public class CompanyController {
         return modelAndView;
     }
 
-    @PostMapping("/companies/add")
+    @PostMapping("/add")
     public String addCompany(@ModelAttribute("company") Company company,
                              BindingResult result, Model model) {
 
