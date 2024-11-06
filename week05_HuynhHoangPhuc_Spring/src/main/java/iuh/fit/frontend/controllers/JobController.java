@@ -1,6 +1,8 @@
 package iuh.fit.frontend.controllers;
 
+import iuh.fit.backend.models.Company;
 import iuh.fit.backend.models.Job;
+import iuh.fit.backend.repositories.CompanyRepository;
 import iuh.fit.backend.repositories.JobRepository;
 import iuh.fit.backend.repositories.JobSkillRepository;
 import iuh.fit.backend.services.JobServices;
@@ -29,6 +31,9 @@ public class JobController {
 
     @Autowired
     private JobSkillRepository jobSkillRepository;
+
+    @Autowired
+    private CompanyRepository companyRepository;
 
     @GetMapping("")
     public String showJobListPaging(Model model,
@@ -100,5 +105,23 @@ public class JobController {
     public String deleteJob(@PathVariable("id") long id) {
         jobRepository.deleteById(id);
         return "redirect:/jobs?success=deleteSuccess";
+    }
+
+    @GetMapping("/view/{id}")
+    public ModelAndView viewCompany(@PathVariable("id") long id) {
+        ModelAndView modelAndView = new ModelAndView();
+        Optional<Company> company = companyRepository.findById(id);
+        if (company.isPresent()) {
+            modelAndView.addObject("company", company.get());
+            modelAndView.setViewName("jobs/view_company");
+        } else {
+            modelAndView.setViewName("redirect:/jobs?error=companyNotFound");
+        }
+        return modelAndView;
+    }
+
+    @GetMapping("/apply/{id}")
+    public String applyJob(@PathVariable("id") long id) {
+        return "redirect:/jobs?success=applySuccess";
     }
 }
