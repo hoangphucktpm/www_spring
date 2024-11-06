@@ -33,13 +33,20 @@ public class JobController {
     @GetMapping("")
     public String showJobListPaging(Model model,
                                     @RequestParam("page") Optional<Integer> page,
+                                    @RequestParam(("search")) Optional<String> search,
                                     @RequestParam("size") Optional<Integer> size) {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(10);
 
         Page<Job> jobPage = jobServices.findAll(currentPage - 1, pageSize, "id", "asc");
 
+        if (search.isPresent()) {
+            jobPage = jobServices.searchJobs(currentPage - 1, pageSize, search.get());
+        }
+
+
         model.addAttribute("jobPage", jobPage);
+        model.addAttribute("search", search.orElse(""));
 
         int totalPages = jobPage.getTotalPages();
         if (totalPages > 0) {

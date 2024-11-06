@@ -40,4 +40,11 @@ public class JobServices {
 
         return jobPage;
     }
+
+    public Page<Job> searchJobs(int pageNo, int pageSize, String searchTerm) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by("id").ascending());
+        return jobRepository.findByJobNameContainingOrCompany_CompNameContainingOrJobSkills_Skill_SkillNameContaining(
+                searchTerm, searchTerm, searchTerm, pageable);
+    }
+
 }
