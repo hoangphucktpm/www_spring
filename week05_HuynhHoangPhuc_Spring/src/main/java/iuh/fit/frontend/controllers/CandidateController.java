@@ -105,8 +105,7 @@ public class CandidateController {
         }
         return modelAndView;
     }
-
-
+    
     @PostMapping("/update")
     public String update(
             @ModelAttribute("candidate") Candidate candidate,
