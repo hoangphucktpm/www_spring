@@ -45,10 +45,28 @@
             font-size: 0.875rem;
             padding: 5px 10px;
         }
+
+        .table {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .table thead {
+            background-color: #007bff;
+            color: #ffffff;
+        }
     </style>
 </head>
 <body>
 <div class="container">
+    <div class="btn-group mb-4">
+        <a href="/candidates" class="btn btn-secondary">Candidates</a>
+        <a href="/companies" class="btn btn-secondary">Company</a>
+        <a href="/jobs" class="btn btn-secondary">Job</a>
+    </div>
     <h1 class="text-center">Company Details</h1>
     <a class="btn btn-primary mb-4" href="/jobs">Back to Jobs</a>
     <div class="card">
@@ -62,6 +80,37 @@
             <p class="card-text"><strong>Email:</strong> <span th:text="${company.email}"></span></p>
         </div>
     </div>
+    <h2 class="text-center mt-4">Jobs Available</h2>
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>STT</th>
+            <th>Job Name</th>
+            <th>Job Description</th>
+            <th>Skills</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="job : ${company.jobs}">
+            <td th:text="${jobStat.index + 1}"></td>
+            <td th:text="${job.jobName}"></td>
+            <td th:text="${job.jobDesc}"></td>
+            <td>
+                <ul>
+                    <li th:each="jobSkill : ${job.jobSkills}">
+                        <span th:text="${jobSkill.skill.skillName}"></span>:
+                        <span th:text="${jobSkill.skillLevel}"></span> -
+                        <span th:text="${jobSkill.skill.type}"></span>
+                    </li>
+                </ul>
+            </td>
+            <td><a class="btn btn-warning btn-sm" th:href="@{/jobs/show-edit-form/{id}(id=${job.id})}">Edit</a></td>
+            <td><a class="btn btn-danger btn-sm" th:href="@{/jobs/delete/{id}(id=${job.id})}">Delete</a></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

@@ -9,6 +9,11 @@
 </head>
 <body>
 <div class="container mt-5">
+    <div class="btn-group mb-4">
+        <a href="/candidates" class="btn btn-secondary">Candidates</a>
+        <a href="/companies" class="btn btn-secondary">Company</a>
+        <a href="/jobs" class="btn btn-secondary">Job</a>
+    </div>
     <div th:switch="${companies}">
         <h2 th:case="null" class="text-center no-candidates">Chưa có công ty nào!</h2>
         <div th:case="*">

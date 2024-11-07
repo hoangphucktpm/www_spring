@@ -23,6 +23,11 @@
 </head>
 <body>
 <div class="container table-container">
+    <div class="btn-group mb-4">
+        <a href="/candidates" class="btn btn-secondary">Candidates</a>
+        <a href="/companies" class="btn btn-secondary">Company</a>
+        <a href="/jobs" class="btn btn-secondary">Job</a>
+    </div>
     <div th:switch="${candidates}">
         <h2 th:case="null" class="no-candidates">No candidates yet!</h2>
         <div th:case="*">

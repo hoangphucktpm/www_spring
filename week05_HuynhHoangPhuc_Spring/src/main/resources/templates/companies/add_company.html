@@ -27,6 +27,11 @@
 <body>
 <div class="container">
     <div class="form-container">
+        <div class="btn-group mb-4">
+            <a href="/candidates" class="btn btn-secondary">Candidates</a>
+            <a href="/companies" class="btn btn-secondary">Company</a>
+            <a href="/jobs" class="btn btn-secondary">Job</a>
+        </div>
         <h1 class="form-title">Add New Company</h1>
         <form th:action="@{/companies/add}" th:object="${company}" method="post">
             <div class="mb-3 row">
