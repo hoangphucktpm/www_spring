@@ -59,4 +59,17 @@ public class CandidateServices {
                 .collect(Collectors.toList());
     }
 
+    //suggestSkillToLearn
+    public List<JobSkill> suggestSkillToLearn(Long candidateId) {
+        Candidate candidate = candidateRepository.findById(candidateId)
+                .orElseThrow(() -> new RuntimeException("Candidate not found"));
+
+        return jobRepository.findAll().stream()
+                .flatMap(job -> job.getJobSkills().stream())
+                .filter(jobSkill -> !candidate.getCandidateSkills().contains(jobSkill))
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+
 }

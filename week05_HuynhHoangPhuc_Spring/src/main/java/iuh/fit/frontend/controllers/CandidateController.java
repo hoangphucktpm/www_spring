@@ -132,12 +132,13 @@ public class CandidateController {
     }
 
 
-    @GetMapping("/candidates/suggest-skill-to-learn/{id}")
+    @GetMapping("/suggest-skill-to-learn/{id}")
     public String suggestSkillToLearn(@PathVariable Long id, Model model) {
-        Candidate candidate = candidateService.findById(id);
+        Candidate candidate = candidateRepository.findById(id).get();
         model.addAttribute("candidate", candidate);
-        model.addAttribute("suggestedSkills", candidateService.suggestSkillsToLearn(candidate));
-        return "candidates/suggest-skill-to-learn";
+        model.addAttribute("suggestedSkills", candidateServices.suggestSkillToLearn(id));
+        return "candidates/suggestedskill";
     }
+
 
 }

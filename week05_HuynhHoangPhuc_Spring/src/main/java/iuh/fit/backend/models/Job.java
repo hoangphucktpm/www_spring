@@ -11,7 +11,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@ToString
+@ToString(exclude = "company, jobSkills")
 @Table(name = "job")
 public class Job {
     @Id
@@ -31,5 +31,6 @@ public class Job {
 
     @OneToMany(mappedBy = "job")
     private Set<JobSkill> jobSkills = new LinkedHashSet<>();
+
 
 }

@@ -4,7 +4,6 @@ import iuh.fit.backend.enums.SkillType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -12,7 +11,6 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@ToString
 @Table(name = "skill")
 public class Skill {
     @Id
@@ -36,4 +34,13 @@ public class Skill {
     @OneToMany(mappedBy = "skill")
     private Set<JobSkill> jobSkills = new LinkedHashSet<>();
 
+    @Override
+    public String toString() {
+        return "Skill{" +
+                "id=" + id +
+                ", skillName='" + skillName + '\'' +
+                ", skillDescription='" + skillDescription + '\'' +
+                ", type=" + type +
+                '}';
+    }
 }
