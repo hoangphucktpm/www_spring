@@ -1,9 +1,12 @@
 package iuh.fit.backend.services;
 
+import iuh.fit.backend.enums.SkillLevel;
+import iuh.fit.backend.models.Candidate;
 import iuh.fit.backend.models.Job;
 import iuh.fit.backend.repositories.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 
@@ -46,5 +49,6 @@ public class JobServices {
         return jobRepository.findByJobNameContainingOrCompany_CompNameContainingOrJobSkills_Skill_SkillNameContaining(
                 searchTerm, searchTerm, searchTerm, pageable);
     }
+
 
 }

@@ -1,5 +1,6 @@
 package iuh.fit.backend.ids;
 
+import iuh.fit.backend.models.Skill;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
@@ -12,13 +13,14 @@ import java.util.Objects;
 @Getter
 @Setter
 @Embeddable
-public class JobSkillId implements Serializable {
+public class JobSkillId extends Skill implements Serializable {
     private static final long serialVersionUID = -4733981701765719882L;
     @Column(name = "job_id", nullable = false)
     private Long jobId;
 
     @Column(name = "skill_id", nullable = false)
     private Long skillId;
+
 
     @Override
     public boolean equals(Object o) {
@@ -32,6 +34,22 @@ public class JobSkillId implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(jobId, skillId);
+    }
+
+    @Override
+    public String toString() {
+        return "JobSkillId{" +
+                "jobId=" + jobId +
+                ", skillId=" + skillId +
+                '}';
+    }
+
+    public JobSkillId() {
+    }
+
+    public JobSkillId(Long jobId, Long skillId) {
+        this.jobId = jobId;
+        this.skillId = skillId;
     }
 
 }

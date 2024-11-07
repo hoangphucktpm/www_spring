@@ -59,6 +59,7 @@
             color: #ffffff;
         }
     </style>
+
 </head>
 <body>
 <div class="container">
@@ -88,12 +89,12 @@
             <th>Job Name</th>
             <th>Job Description</th>
             <th>Skills</th>
-            <th>Edit</th>
+            <th>View Candidate</th>
             <th>Delete</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="job : ${company.jobs}">
+        <tr th:each="job, jobStat : ${company.jobs}">
             <td th:text="${jobStat.index + 1}"></td>
             <td th:text="${job.jobName}"></td>
             <td th:text="${job.jobDesc}"></td>
@@ -106,7 +107,9 @@
                     </li>
                 </ul>
             </td>
-            <td><a class="btn btn-warning btn-sm" th:href="@{/jobs/show-edit-form/{id}(id=${job.id})}">Edit</a></td>
+            <td><a class="btn btn-warning btn-sm"
+                   th:href="@{/jobs/view_candidatebyskill/{id}(id=${job.id})}">View</a>
+            </td>
             <td><a class="btn btn-danger btn-sm" th:href="@{/jobs/delete/{id}(id=${job.id})}">Delete</a></td>
         </tr>
         </tbody>

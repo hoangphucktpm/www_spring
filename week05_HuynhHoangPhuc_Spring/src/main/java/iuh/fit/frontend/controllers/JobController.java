@@ -1,10 +1,15 @@
 package iuh.fit.frontend.controllers;
 
+import iuh.fit.backend.ids.JobSkillId;
+import iuh.fit.backend.models.Candidate;
 import iuh.fit.backend.models.Company;
 import iuh.fit.backend.models.Job;
+import iuh.fit.backend.models.JobSkill;
+import iuh.fit.backend.repositories.CandidateRepository;
 import iuh.fit.backend.repositories.CompanyRepository;
 import iuh.fit.backend.repositories.JobRepository;
 import iuh.fit.backend.repositories.JobSkillRepository;
+import iuh.fit.backend.services.CandidateServices;
 import iuh.fit.backend.services.JobServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,7 +20,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -34,6 +41,17 @@ public class JobController {
 
     @Autowired
     private CompanyRepository companyRepository;
+
+    @Autowired
+    private CandidateRepository candidateRepository;
+    @Autowired
+    private CandidateServices candidateServices;
+
+    @GetMapping("/list_job")
+    public String showJobList(Model model) {
+        model.addAttribute("jobs", jobRepository.findAll());
+        return "jobs/list_no_paging_job";
+    }
 
     @GetMapping("")
     public String showJobListPaging(Model model,
@@ -119,6 +137,17 @@ public class JobController {
         }
         return modelAndView;
     }
+
+    @GetMapping("/view_candidatebyskill/{id}")
+    public ModelAndView viewCandidateBySkill(@PathVariable("id") long jobId) {
+        ModelAndView mav = new ModelAndView("jobs/view_candidate");
+        Job job = jobRepository.findById(jobId)
+                .orElseThrow(() -> new RuntimeException("Job not found"));
+        mav.addObject("job", job);
+        mav.addObject("listCandidate", candidateServices.findCandidatesForJob(jobId));
+        return mav;
+    }
+
 
     @GetMapping("/apply/{id}")
     public String applyJob(@PathVariable("id") long id) {

@@ -122,4 +122,6 @@ public class CompanyController {
 
         return "redirect:/companies?success=updateSuccess";
     }
+
+
 }
