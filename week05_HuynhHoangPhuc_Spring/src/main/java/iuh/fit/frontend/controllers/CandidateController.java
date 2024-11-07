@@ -105,7 +105,7 @@ public class CandidateController {
         }
         return modelAndView;
     }
-    
+
     @PostMapping("/update")
     public String update(
             @ModelAttribute("candidate") Candidate candidate,
@@ -131,5 +131,13 @@ public class CandidateController {
         return "redirect:/candidates?success=updateSuccess";
     }
 
+
+    @GetMapping("/candidates/suggest-skill-to-learn/{id}")
+    public String suggestSkillToLearn(@PathVariable Long id, Model model) {
+        Candidate candidate = candidateService.findById(id);
+        model.addAttribute("candidate", candidate);
+        model.addAttribute("suggestedSkills", candidateService.suggestSkillsToLearn(candidate));
+        return "candidates/suggest-skill-to-learn";
+    }
 
 }

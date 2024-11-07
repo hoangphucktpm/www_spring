@@ -64,21 +64,18 @@
 </head>
 <body>
 <div class="container">
-    <!-- Navigation Buttons -->
     <div class="btn-group mb-4">
         <a href="/candidates" class="btn btn-secondary">Candidates</a>
         <a href="/companies" class="btn btn-secondary">Company</a>
         <a href="/jobs" class="btn btn-secondary">Job</a>
     </div>
 
-    <!-- Job Details -->
     <div th:object="${job}">
         <h1>Job Details</h1>
         <p><b>Name:</b> <span th:text="*{jobName}"></span></p>
         <p><b>Description:</b> <span th:text="*{jobDesc}"></span></p>
     </div>
 
-    <!-- Candidate List Table -->
     <div>
         <h1>List of Candidates for Job: <span th:text="${job.jobName}"></span></h1>
         <table class="table table-hover table-striped">
@@ -109,6 +106,7 @@
                     <a th:href="@{'/jobs/' + ${job.id} + '/' + ${candidate.id} + '/send-email'}"
                        class="btn btn-primary">Send Email</a>
                 </td>
+
             </tr>
             </tbody>
         </table>

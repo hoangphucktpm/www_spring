@@ -10,15 +10,19 @@ import iuh.fit.backend.repositories.CompanyRepository;
 import iuh.fit.backend.repositories.JobRepository;
 import iuh.fit.backend.repositories.JobSkillRepository;
 import iuh.fit.backend.services.CandidateServices;
+import iuh.fit.backend.services.EmailService;
 import iuh.fit.backend.services.JobServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,6 +50,12 @@ public class JobController {
     private CandidateRepository candidateRepository;
     @Autowired
     private CandidateServices candidateServices;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private JavaMailSender mailSender;
 
     @GetMapping("/list_job")
     public String showJobList(Model model) {
@@ -146,6 +156,28 @@ public class JobController {
         mav.addObject("job", job);
         mav.addObject("listCandidate", candidateServices.findCandidatesForJob(jobId));
         return mav;
+    }
+
+    @GetMapping("/{jobId}/{candidateId}/send-email")
+    public String sendEmail(@PathVariable("jobId") Long jobId, @PathVariable("candidateId") Long candidateId) {
+        Candidate candidate = candidateRepository.findById(candidateId)
+                .orElseThrow(() -> new RuntimeException("Candidate not found"));
+
+        String subject = "Job Application for " + candidate.getFullName();
+        String body = "Hello " + candidate.getFullName() + ",\n\nWe are pleased to inform you about the job opportunity at our company. Please visit our website for more details.";
+
+        sendEmail(candidate.getEmail(), subject, body);
+
+        return "redirect:/jobs?success=applySuccess";
+    }
+
+    private void sendEmail(String to, String subject, String body) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(body);
+        message.setFrom("hoangphuchm11@gmail.com");
+        mailSender.send(message);
     }
 
 
