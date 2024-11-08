@@ -1,14 +1,9 @@
 package iuh.fit.frontend.controllers;
 
+import iuh.fit.backend.enums.SkillLevel;
 import iuh.fit.backend.ids.JobSkillId;
-import iuh.fit.backend.models.Candidate;
-import iuh.fit.backend.models.Company;
-import iuh.fit.backend.models.Job;
-import iuh.fit.backend.models.JobSkill;
-import iuh.fit.backend.repositories.CandidateRepository;
-import iuh.fit.backend.repositories.CompanyRepository;
-import iuh.fit.backend.repositories.JobRepository;
-import iuh.fit.backend.repositories.JobSkillRepository;
+import iuh.fit.backend.models.*;
+import iuh.fit.backend.repositories.*;
 import iuh.fit.backend.services.CandidateServices;
 import iuh.fit.backend.services.EmailService;
 import iuh.fit.backend.services.JobServices;
@@ -57,6 +52,10 @@ public class JobController {
     @Autowired
     private JavaMailSender mailSender;
 
+
+    @Autowired
+    private SkillRepository skillRepository;
+
     @GetMapping("/list_job")
     public String showJobList(Model model) {
         model.addAttribute("jobs", jobRepository.findAll());
@@ -98,14 +97,42 @@ public class JobController {
         return modelAndView;
     }
 
-    @PostMapping("/add")
-    public String addJob(@ModelAttribute("job") Job job, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            return "jobs/add_job";
-        }
-        jobRepository.save(job);
-        return "redirect:/jobs";
+    @GetMapping("/add/{id}")
+    public ModelAndView showAddJobForm(@PathVariable("id") Long companyId) {
+        ModelAndView modelAndView = new ModelAndView();
+        List<Skill> skills = skillRepository.findAll();
+        modelAndView.addObject("skills", skills);
+        modelAndView.addObject("companyId", companyId);
+        modelAndView.setViewName("jobs/add_job");
+        return modelAndView;
     }
+
+
+    @PostMapping("/jobs/save")
+    public String saveJob(@RequestParam("jobName") String jobName,
+                          @RequestParam("jobDesc") String jobDesc,
+                          @RequestParam("skills") List<Long> skills,
+                          @RequestParam("skillLevel") String skillLevel,
+                          @RequestParam("companyId") Long companyId) { // Lấy companyId từ form
+        // Lưu công việc mới vào cơ sở dữ liệu
+        Job job = new Job();
+        job.setJobName(jobName);
+        job.setJobDesc(jobDesc);
+
+        // Tạo danh sách JobSkill từ các kỹ năng đã chọn
+        job.setJobSkills(skills.stream().map(skillId -> {
+            JobSkill jobSkill = new JobSkill();
+            jobSkill.setId(new JobSkillId(job.getId(), skillId));  // Lưu ID của công việc và kỹ năng
+            jobSkill.setSkillLevel(SkillLevel.valueOf(skillLevel)); // Đặt mức độ kỹ năng
+            return jobSkill;
+        }).collect(Collectors.toSet()));
+
+        jobRepository.save(job);  // Lưu công việc vào cơ sở dữ liệu
+
+        // Sau khi lưu, chuyển hướng về trang chi tiết công ty
+        return "redirect:/companies/view_company/" + companyId;  // Sử dụng companyId để quay lại trang công ty
+    }
+
 
     @GetMapping("/show-edit-form/{id}")
     public ModelAndView showEditForm(@PathVariable("id") long id) {

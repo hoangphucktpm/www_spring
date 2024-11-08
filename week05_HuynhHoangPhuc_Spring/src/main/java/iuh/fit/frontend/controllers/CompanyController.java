@@ -123,5 +123,18 @@ public class CompanyController {
         return "redirect:/companies?success=updateSuccess";
     }
 
+    @GetMapping("/view_company/{id}")
+    public ModelAndView viewCompany(@PathVariable("id") long id) {
+        ModelAndView modelAndView = new ModelAndView();
+        Optional<Company> company = companyRepository.findById(id);
+        if (company.isPresent()) {
+            modelAndView.addObject("company", company.get());
+            modelAndView.setViewName("companies/view_detail_company");
+        } else {
+            modelAndView.setViewName("redirect:/jobs?error=companyNotFound");
+        }
+        return modelAndView;
+    }
+
 
 }
