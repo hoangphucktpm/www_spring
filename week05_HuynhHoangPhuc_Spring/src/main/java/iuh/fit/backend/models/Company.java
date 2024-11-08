@@ -1,5 +1,6 @@
 package iuh.fit.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,4 +43,11 @@ public class Company {
     private Set<Job> jobs = new LinkedHashSet<>();
 
 
+    @Override
+    public String toString() {
+        return "Company{" +
+                "compName='" + compName + '\'' +
+                // Tránh gọi lại toString() của Job ở đây
+                '}';
+    }
 }

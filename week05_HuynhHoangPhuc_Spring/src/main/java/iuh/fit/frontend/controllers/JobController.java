@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -112,35 +113,40 @@ public class JobController {
     public String saveJob(@RequestParam("jobName") String jobName,
                           @RequestParam("jobDesc") String jobDesc,
                           @RequestParam("skills") List<Long> skills,
-                          @RequestParam("skillLevel") String skillLevel,
+                          @RequestParam("skillLevels") List<String> skillLevels,
                           @RequestParam("companyId") Long companyId) {
-        // Tạo đối tượng Job và lưu nó để có ID
         Job job = new Job();
         job.setJobName(jobName);
         job.setJobDesc(jobDesc);
-        job.setCompany(companyRepository.findById(companyId)
-                .orElseThrow(() -> new RuntimeException("Company not found")));
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException("Company not found"));
+        job.setCompany(company);
 
-        // Lưu job để Hibernate gán ID
-        job = jobRepository.save(job);
+// Lưu job trước để có jobId
+        Job savedJob = jobRepository.save(job);
 
-        // Khởi tạo và thêm các JobSkill
-        Set<JobSkill> jobSkills = skills.stream().map(skillId -> {
+        Set<JobSkill> jobSkills = new HashSet<>();
+        for (int i = 0; i < skills.size(); i++) {
             JobSkill jobSkill = new JobSkill();
-            jobSkill.setJob(job);
-            jobSkill.setSkill(skillRepository.findById(skillId)
+            JobSkillId jobSkillId = new JobSkillId();
+            jobSkillId.setJobId(savedJob.getId());  // Sử dụng savedJob.getId() sau khi lưu job
+            jobSkillId.setSkillId(skills.get(i));
+            jobSkill.setId(jobSkillId);
+            jobSkill.setJob(savedJob);
+            jobSkill.setSkill(skillRepository.findById(skills.get(i))
                     .orElseThrow(() -> new RuntimeException("Skill not found")));
-            jobSkill.setSkillLevel(SkillLevel.valueOf(skillLevel));
-            return jobSkill;
-        }).collect(Collectors.toSet());
+            jobSkill.setSkillLevel(SkillLevel.valueOf(skillLevels.get(i)));
+            jobSkills.add(jobSkill);
+            jobSkillRepository.save(jobSkill);
+        }
 
-        // Gán các kỹ năng cho job
-        job.setJobSkills(jobSkills);
+        savedJob.setJobSkills(jobSkills); // Thêm các JobSkill vào job
+        jobRepository.save(savedJob);  // Cập nhật lại job với các JobSkill
 
-        // Lưu lại job đã cập nhật
-        jobRepository.save(job);
+        System.out.println("Skills: " + jobSkills);
 
         return "redirect:/jobs?success=addSuccess";
+
     }
 
 

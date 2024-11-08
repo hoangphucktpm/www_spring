@@ -46,11 +46,55 @@
             padding: 5px 10px;
         }
     </style>
+
+    <script>
+        function addSkill() {
+            const skillGroup = document.createElement("div");
+            skillGroup.classList.add("form-group", "mt-3");
+
+            const skillLabel = document.createElement("label");
+            skillLabel.innerText = "Skill";
+            skillGroup.appendChild(skillLabel);
+
+            const skillSelect = document.createElement("select");
+            skillSelect.classList.add("form-control");
+            skillSelect.name = "skills";
+            skillSelect.required = true;
+            skillSelect.innerHTML = document.getElementById("skills").innerHTML;
+            skillGroup.appendChild(skillSelect);
+
+            const levelLabel = document.createElement("label");
+            levelLabel.classList.add("mt-2");
+            levelLabel.innerText = "Skill Level";
+            skillGroup.appendChild(levelLabel);
+
+            const levelSelect = document.createElement("select");
+            levelSelect.classList.add("form-control");
+            levelSelect.name = "skillLevels";
+            levelSelect.required = true;
+            levelSelect.innerHTML = `
+            <option value="BEGINNER">Beginner</option>
+            <option value="INTERMEDIATE">Intermediate</option>
+            <option value="EXPERT">Expert</option>
+        `;
+            skillGroup.appendChild(levelSelect);
+
+            document.getElementById("skillsContainer").appendChild(skillGroup);
+        }
+
+        function removeSkill() {
+            const skillsContainer = document.getElementById("skillsContainer");
+            if (skillsContainer.children.length > 1) {
+                skillsContainer.removeChild(skillsContainer.lastChild);
+            }
+        }
+    </script>
 </head>
 <body>
 <div class="container">
     <h1 class="text-center">Add New Job</h1>
-    <a class="btn btn-primary mb-4" href="/companies/view_company/{companyId}">Back to Company</a>
+    <a class="btn btn-primary mb-4" th:href="@{/companies/view_company/{companyId}(companyId=${companyId})}">Back to
+        Company</a>
 
     <div class="card">
         <div class="card-header">
@@ -67,24 +111,29 @@
                     <label for="jobDesc">Job Description</label>
                     <textarea class="form-control" id="jobDesc" name="jobDesc" rows="4" required></textarea>
                 </div>
-                <div class="form-group">
-                    <label for="skills">Skills</label>
-                    <select class="form-control" id="skills" th:value="skills.id" name="skills" multiple required>
-                        <option th:each="skill : ${skills}" th:value="${skill.id}"
-                                th:text="${skill.skillName}"></option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="skillLevel">Skill Level</label>
-                    <select class="form-control" id="skillLevel" name="skillLevel" required>
-                        <option value="BEGINNER">Beginner</option>
-                        <option value="INTERMEDIATE">Intermediate</option>
-                        <option value="EXPERT">Expert</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">Save Job</button>
-            </form>
 
+                <div id="skillsContainer">
+                    <div class="form-group">
+                        <label for="skills">Skill</label>
+                        <select class="form-control" id="skills" name="skills" required>
+                            <option th:each="skill : ${skills}" th:value="${skill.id}"
+                                    th:text="${skill.skillName}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="skillLevel">Skill Level</label>
+                        <select class="form-control" id="skillLevel" name="skillLevels" required>
+                            <option value="BEGINNER">Beginner</option>
+                            <option value="INTERMEDIATE">Intermediate</option>
+                            <option value="EXPERT">Expert</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-secondary mt-3" onclick="addSkill()">+</button>
+                <button type="button" class="btn btn-secondary mt-3" onclick="removeSkill()">-</button>
+                <button type="submit" class="btn btn-primary mt-3">Save Job</button>
+            </form>
         </div>
     </div>
 </div>
