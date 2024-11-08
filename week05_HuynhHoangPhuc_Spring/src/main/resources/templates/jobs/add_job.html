@@ -69,7 +69,7 @@
                 </div>
                 <div class="form-group">
                     <label for="skills">Skills</label>
-                    <select class="form-control" id="skills" name="skills" multiple required>
+                    <select class="form-control" id="skills" th:value="skills.id" name="skills" multiple required>
                         <option th:each="skill : ${skills}" th:value="${skill.id}"
                                 th:text="${skill.skillName}"></option>
                     </select>

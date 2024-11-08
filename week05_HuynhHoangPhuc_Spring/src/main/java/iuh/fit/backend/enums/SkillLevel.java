@@ -7,7 +7,7 @@ public enum SkillLevel {
 
     ADVANCED(3),
 
-    IMTERMEDIATE(2),
+    INTERMEDIATE(2),
 
     BEGINER(1);
 

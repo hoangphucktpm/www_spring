@@ -108,29 +108,27 @@ public class JobController {
     }
 
 
-    @PostMapping("/jobs/save")
+    @PostMapping("/save")
     public String saveJob(@RequestParam("jobName") String jobName,
                           @RequestParam("jobDesc") String jobDesc,
                           @RequestParam("skills") List<Long> skills,
                           @RequestParam("skillLevel") String skillLevel,
-                          @RequestParam("companyId") Long companyId) { // Lấy companyId từ form
-        // Lưu công việc mới vào cơ sở dữ liệu
+                          @RequestParam("companyId") Long companyId) {
         Job job = new Job();
         job.setJobName(jobName);
         job.setJobDesc(jobDesc);
-
-        // Tạo danh sách JobSkill từ các kỹ năng đã chọn
+        job.setCompany(companyRepository.findById(companyId).
+                orElseThrow(() -> new RuntimeException("Company not found")));
         job.setJobSkills(skills.stream().map(skillId -> {
             JobSkill jobSkill = new JobSkill();
-            jobSkill.setId(new JobSkillId(job.getId(), skillId));  // Lưu ID của công việc và kỹ năng
-            jobSkill.setSkillLevel(SkillLevel.valueOf(skillLevel)); // Đặt mức độ kỹ năng
+            jobSkill.setId(new JobSkillId(job.getId(), skillId));
+            jobSkill.setSkillLevel(SkillLevel.valueOf(skillLevel));
             return jobSkill;
         }).collect(Collectors.toSet()));
 
-        jobRepository.save(job);  // Lưu công việc vào cơ sở dữ liệu
+        jobRepository.save(job);
 
-        // Sau khi lưu, chuyển hướng về trang chi tiết công ty
-        return "redirect:/companies/view_company/" + companyId;  // Sử dụng companyId để quay lại trang công ty
+        return "redirect:/jobs?success=addSuccess";
     }
 
 
