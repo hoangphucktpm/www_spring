@@ -114,6 +114,7 @@ public class JobController {
                           @RequestParam("jobDesc") String jobDesc,
                           @RequestParam("skills") List<Long> skills,
                           @RequestParam("skillLevels") List<String> skillLevels,
+                          @RequestParam("more_infos") List<String> moreInfos,
                           @RequestParam("companyId") Long companyId) {
         Job job = new Job();
         job.setJobName(jobName);
@@ -122,17 +123,17 @@ public class JobController {
                 .orElseThrow(() -> new RuntimeException("Company not found"));
         job.setCompany(company);
 
-// Lưu job trước để có jobId
         Job savedJob = jobRepository.save(job);
 
         Set<JobSkill> jobSkills = new HashSet<>();
         for (int i = 0; i < skills.size(); i++) {
             JobSkill jobSkill = new JobSkill();
             JobSkillId jobSkillId = new JobSkillId();
-            jobSkillId.setJobId(savedJob.getId());  // Sử dụng savedJob.getId() sau khi lưu job
+            jobSkillId.setJobId(savedJob.getId());
             jobSkillId.setSkillId(skills.get(i));
             jobSkill.setId(jobSkillId);
             jobSkill.setJob(savedJob);
+            jobSkill.setMoreInfos(moreInfos.get(i));
             jobSkill.setSkill(skillRepository.findById(skills.get(i))
                     .orElseThrow(() -> new RuntimeException("Skill not found")));
             jobSkill.setSkillLevel(SkillLevel.valueOf(skillLevels.get(i)));
@@ -140,13 +141,12 @@ public class JobController {
             jobSkillRepository.save(jobSkill);
         }
 
-        savedJob.setJobSkills(jobSkills); // Thêm các JobSkill vào job
-        jobRepository.save(savedJob);  // Cập nhật lại job với các JobSkill
+        savedJob.setJobSkills(jobSkills);
+        jobRepository.save(savedJob);
 
         System.out.println("Skills: " + jobSkills);
 
         return "redirect:/jobs?success=addSuccess";
-
     }
 
 

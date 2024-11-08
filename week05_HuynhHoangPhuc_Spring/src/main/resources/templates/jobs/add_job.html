@@ -76,8 +76,19 @@
             <option value="BEGINNER">Beginner</option>
             <option value="INTERMEDIATE">Intermediate</option>
             <option value="EXPERT">Expert</option>
-        `;
+            `;
             skillGroup.appendChild(levelSelect);
+
+            const moreInfosLabel = document.createElement("label");
+            moreInfosLabel.classList.add("mt-2");
+            moreInfosLabel.innerText = "More Infos";
+            skillGroup.appendChild(moreInfosLabel);
+
+            const moreInfosInput = document.createElement("input");
+            moreInfosInput.classList.add("form-control");
+            moreInfosInput.name = "more_infos";
+            moreInfosInput.required = true;
+            skillGroup.appendChild(moreInfosInput);
 
             document.getElementById("skillsContainer").appendChild(skillGroup);
         }
@@ -112,6 +123,7 @@
                     <textarea class="form-control" id="jobDesc" name="jobDesc" rows="4" required></textarea>
                 </div>
 
+
                 <div id="skillsContainer">
                     <div class="form-group">
                         <label for="skills">Skill</label>
@@ -127,6 +139,10 @@
                             <option value="INTERMEDIATE">Intermediate</option>
                             <option value="EXPERT">Expert</option>
                         </select>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="more_infos">More Infos</label>
+                        <input type="text" class="form-control" id="more_infos" name="more_infos" required>
                     </div>
                 </div>
 
