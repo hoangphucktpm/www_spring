@@ -44,12 +44,16 @@ public class JobSkillId extends Skill implements Serializable {
                 '}';
     }
 
-    public JobSkillId() {
+    public JobSkillId(Long id) {
     }
 
     public JobSkillId(Long jobId, Long skillId) {
         this.jobId = jobId;
         this.skillId = skillId;
     }
+
+    public JobSkillId() {
+    }
+    
 
 }

@@ -114,18 +114,30 @@ public class JobController {
                           @RequestParam("skills") List<Long> skills,
                           @RequestParam("skillLevel") String skillLevel,
                           @RequestParam("companyId") Long companyId) {
+        // Tạo đối tượng Job và lưu nó để có ID
         Job job = new Job();
         job.setJobName(jobName);
         job.setJobDesc(jobDesc);
-        job.setCompany(companyRepository.findById(companyId).
-                orElseThrow(() -> new RuntimeException("Company not found")));
-        job.setJobSkills(skills.stream().map(skillId -> {
+        job.setCompany(companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException("Company not found")));
+
+        // Lưu job để Hibernate gán ID
+        job = jobRepository.save(job);
+
+        // Khởi tạo và thêm các JobSkill
+        Set<JobSkill> jobSkills = skills.stream().map(skillId -> {
             JobSkill jobSkill = new JobSkill();
-            jobSkill.setId(new JobSkillId(job.getId(), skillId));
+            jobSkill.setJob(job);
+            jobSkill.setSkill(skillRepository.findById(skillId)
+                    .orElseThrow(() -> new RuntimeException("Skill not found")));
             jobSkill.setSkillLevel(SkillLevel.valueOf(skillLevel));
             return jobSkill;
-        }).collect(Collectors.toSet()));
+        }).collect(Collectors.toSet());
 
+        // Gán các kỹ năng cho job
+        job.setJobSkills(jobSkills);
+
+        // Lưu lại job đã cập nhật
         jobRepository.save(job);
 
         return "redirect:/jobs?success=addSuccess";
